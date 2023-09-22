@@ -1,0 +1,10 @@
+CREATE TABLE tbl_todo (
+	tno NUMBER(6) PRIMARY KEY,
+	title varchar2(100) NOT NULL,
+	dueDate DATE NOT NULL,
+	writer varchar2(50) NOT NULL,
+	finished NUMBER(2) DEFAULT 0
+)
+
+DROP SEQUENCE todoSeq;
+CREATE SEQUENCE todoSe q START WITH 20111;
