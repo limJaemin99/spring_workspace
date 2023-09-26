@@ -8,7 +8,7 @@
 	<title>우리 북카페</title>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" 
-		href="${pageContext.request.contextPath }/css/community.css?v=3"> 
+		href="${pageContext.request.contextPath }/resources/css/community.css?v=3"> 
 </head>
 <body>
 			<main id="write">

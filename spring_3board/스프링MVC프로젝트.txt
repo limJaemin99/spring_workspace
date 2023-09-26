@@ -42,13 +42,54 @@
 		
 	2) jsp 파일이 있는 폴더 : src/main/webapp/WEB-INF/views 폴더 (views 는 개발자가 만들었다.)
 	
-	
-## 3. 요청 처리 컨트롤러의 핸들러 메소드 형식	━━━━━━━━━━━━━━━ ★ 중요 ★ ━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ ★ 중요 ★ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## 3. 요청 처리 컨트롤러의 핸들러 메소드 형식
 	1) View name 은 요청 URL 과 동일하다.
+	
 	2) View 에 전달할 데이터는 Model 객체에 저장한다.
+		ㄴ View 에 전달하면 Attribute
+		ㄴ redirect 로 전달하면 파라미터가 된다. (RedirectAttributes 의 addAttribute() 와 동일)
+		
 	3) 파라미터 저장은 핸들러 메소드의 인자로 선언된 변수가 자동으로 한다.
 		ㄴ @RequestParam(defaultValue = "1") 은 파라미터의 초기값을 설정하는 형식이다.
-	4) 파라미터로 받은 값이 다시 View 로 전달할 때는 @ModelAttribute 로 설정한다.
-	5) 파라미터가 많을 때, 그것들을 필드로 갖는 DTO 또는 Map 타입으로 선언하여 전달받는다.
-		ㄴ 파라미터의 name 속성과 일치하는 필드만 매핑이 된다.
+	
+	4) 파라미터로 받은 값이 다시 View 로 전달할 때는 @ModelAttribute 로 설정한다. ★★★★★★★★★★
+		ㄴ View 에 전달하면 Attribute
+		ㄴ redirect 로 전달하면 파라미터가 된다. (RedirectAttributes 의 addAttribute() 와 동일)
+		
+	5) 파라미터 개수가 많을 때, 그것들을 필드로 갖는 DTO 또는 Map 타입으로 선언하여 전달받는다.
+		ㄴ 파라미터의 name 속성과 일치하는 DTO 필드만 매핑이 된다. (★★★★★ DTO 에 setter 필수 ★★★★★)
+		ㄴ Map 으로 파라미터를 받을 경우 @RequestParam 필수
+		
 	6) POST 요청을 처리한 후 다른 URL 로 Redirect 할 때는 [ return "redirect:URL 주소"; ] 형식으로 한다.
+	
+	7) 6번과 같이 redirect 할 때 스프링의 특징 : RedirectAttributes 를 사용해서 리다이렉트 URL 에 파라미터를 지정
+	
+	※ 요청을 보낸 클라이언트의 ip 주소 : ${pageContext.request.remoteAddr}
+	
+★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+※ 보충 설명 : 주로 사용되는 방법
+ 	- Model 객체의 addAttribute() 메소드는
+ 	   ★★★ JSP 에서 request.setAttribute() 또는 session.setAttribute() 와 같은 동작을 한다.
+ 	   
+ 	- RedirectAttributes 객체의
+ 	   ★★★ addFlashAttribute() 는 [ 파라미터 X ] , [ 임시 데이터 값을 저장 ] 하므로 URL 에 표시하지 않는다.(1회용)
+ 	   
+	- RedirectAttributes 객체의
+		   addAttribute() 는 redirect URL 에 파라미터를 설정하는 역할을 한다.(▶ Model 객체로 대체 가능)
+
+## 4. Session 사용 방법									▼ 's' 있음
+	방법 1) Model 객체로 addAttribute() 하고, 애트리뷰트 이름을 @SessionAttributes 어노테이션으로 지정하기
+			▶ 이때는 반드시 logout(세션 데이터 삭제) 을 SessionStatus 객체로만 할 수 있다.
+			
+	방법 2) 기존 서블릿에서와 같이 메소드 인자로 HttpSession 타입을 선언하여 session.setAttribute 로 저장하기
+			▶ 이때는 반드시 logout 을 HttpSession 객체로 한다.
+		▼ 's' 없음
+	※ @SessionAttribute("user") BookUser user 를 메소드 인자로 선언하면 세션에 저장된 user 애트리뷰트를 가져올 수 있다.
+			▶ 단, 이때는 방법1) 과 방법2) 로 저장된 것 모두 가져올 수 있다.
+
+
+
+
+
+

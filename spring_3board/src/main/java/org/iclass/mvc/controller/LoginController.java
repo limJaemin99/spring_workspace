@@ -1,0 +1,66 @@
+package org.iclass.mvc.controller;
+
+import java.util.Map;
+
+import org.iclass.mvc.dto.BookUser;
+import org.iclass.mvc.service.BookUserService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import lombok.RequiredArgsConstructor;
+
+
+// [방법 1] @SessionAttributes 를 사용하는 세션 ▶ [방법 2] 사용하는동안 주석하기
+@Controller
+@RequiredArgsConstructor
+@SessionAttributes(names = {"user"})	//user 를 sessionAttribute 로 설정
+
+//━━━ [예시] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//@SessionAttributes(names = {"user","A","B"})
+//위와 같이 세션 애트리뷰트를 생성했다면
+//	model.addAttribute("user", member);
+//	model.addAttribute("A", a);
+//	model.addAttribute("B", b);
+//	와 같은 방식으로 model 에 애트리뷰트 를 설정했을 때 해당 애트리뷰트는 session Attribute로 저장된다.
+public class LoginController {
+	private final BookUserService service;
+
+	
+	@GetMapping("/login")    
+	public void login() {	//login.jsp View 로 요청 전달
+		
+	}
+	
+	
+	@PostMapping("/login")  //POST 요청일때 @PostMapping. param 에 저장되는 것 = id/pw
+	public String loginProc(@RequestParam Map<String,String> param, RedirectAttributes redirectAttributes, Model model) {
+		String url="/";		//계정정보가 일치할때 context path(index)로 이동
+		
+		BookUser member = service.login(param);
+		
+		if(member == null) {	
+			redirectAttributes.addFlashAttribute("incorrect","y");
+			url="login";   //계정 정보가 틀릴때 다시 로그인으로 이동
+		} else {
+			model.addAttribute("user", member);
+		}
+		
+		return "redirect:"+url;		
+	}
+
+	
+	@GetMapping("logout")
+	public String logout(SessionStatus session) {	//SessionStatus : @SessionAttribute 로 저장된 model 을 관리하는 객체
+		//▼ @SessionAttributes 로 세션 attribute 를 생성했으면 반드시 아래 방법으로만 삭제 가능
+		session.setComplete();	//session 사용 완료 =▶ session Attribute 삭제
+		
+		return "redirect:/";
+	}
+	
+}

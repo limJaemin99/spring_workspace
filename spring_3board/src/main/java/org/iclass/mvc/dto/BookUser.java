@@ -15,13 +15,11 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CommunityComments {
-	private int idx;
-	private long mref;
-	private String writer;
-	private String content;
-	private LocalDate createdAt;
-	private String ip;
-	private int heart;
-
+public class BookUser {
+	private String id;
+	private String name;
+	private String email;
+	private int age;
+	private LocalDate reg_date;
+	private String password;
 }
