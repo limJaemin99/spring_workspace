@@ -88,8 +88,29 @@
 	※ @SessionAttribute("user") BookUser user 를 메소드 인자로 선언하면 세션에 저장된 user 애트리뷰트를 가져올 수 있다.
 			▶ 단, 이때는 방법1) 과 방법2) 로 저장된 것 모두 가져올 수 있다.
 
-
-
-
-
-
+-------------------------------------------------------------------------------------------------
+★★★ 중요 ★★★   
+	① [ PRG 패턴 ] : POST - Redirect - Get
+		1) 사용자가 컨트롤러에 POST 방식으로 요청한다.
+		2) 요청처리 한 후에 브라우저는 다른 경로로 이동하라는 응답 (Redirect)
+		3) 브라우저는 리다이렉트 URL 로 GET 요청한다.
+	
+		● 게시판 예제 프로젝트는
+		- /community/write POST 요청 처리 후 /community/list 로 리다이렉트
+		- /community/save POST 요청 처리 후 /community/read 로 리다이렉트
+		- /community/delete POST 요청 처리 후 /community/list 로 리다이렉트
+		- /login POST 요청 처리 후 /(루트 컨텍스트 패스) 로 리다이렉트
+		- /member/join POST 요청 처리 후 /member/welcome 으로 리다이렉트
+		
+	② [ 스프링 MVC 사용자 요청 화면 ] : 사용자	요청 화면을 보여주기 위해 GetMapping 이 반드시 필요하다.
+		1) 데이터 전달 X 화면만 보여주기
+			- /community/write GET 요청 ▶ View 파일명 리턴
+			- /member/join GET 요청 ▶ View 파일명 리턴
+			- /login GET 요청 ▶ View 파일명 리턴
+			
+		2) 데이터 전달 O 화면에 출력하기
+			- /community/list , read , update GET 요청 ▶ request 로 전달받은 Model 에 저장된 데이터 출력
+			- / GET 요청(루트 컨텍스트)은 출력값을 세션에서 가져와서 출력
+		
+		3) 특별한 logout GET 요청 ▶ redirect:/
+		
